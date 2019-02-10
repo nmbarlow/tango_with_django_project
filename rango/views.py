@@ -22,7 +22,7 @@ def index(request):
 
 def about(request):
     # Construct a dictionary to pass to the template engine as its context.
-    context_dict = {'djangomessage' : "This tutorial has been put together by Kelly."}
+    context_dict = {'djangomessage' : "This tutorial has been put together by Nadya Barlow."}
 
     #Return a rendered response to send to the client.
     return render(request, 'rango/about.html', context=context_dict)
