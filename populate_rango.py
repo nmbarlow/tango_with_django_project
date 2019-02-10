@@ -1,17 +1,18 @@
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE',
- 'tango_with_django_project.settings')
-# do this first - an exception will occur as infrastructure not been initialised yet
+ 'tango_with_django_project.settings') # Must do this first
 
+# Must do this way else will get an exception as infrastructure not been initialised yet
 import django
-django.setup() # import project settings
+django.setup() # Import Django project's settings
 from rango.models import Category, Page
 
 def populate():
     # First, we will create lists of dictionaries containing the pages
     # we want to add into each category.
     # Then we will create a dictionary of dictionaries for our categories.
-    # Allows us to iterate through each data structure, and add the data to our models.
+    # This might seem a little bit confusing, but it allows us to iterate
+    # through each data structure, and add the data to our models.
 
     python_pages = [
         {"title" : "Official Python Tutorial",
@@ -38,21 +39,18 @@ def populate():
          "url" : "http://flask.pocoo.org"}
     ]
 
-    cats = {"Python" : {"pages" : python_pages},
-            "Django" : {"pages" : django_pages},
-            "Other Frameworks" : {"pages" : other_pages}}
-
-
+    cats = {"Python" : {"pages" : python_pages, "views" : 128, "likes" : 64},
+            "Django" : {"pages" : django_pages, "views" : 64, "likes" : 32},
+            "Other Frameworks" : {"pages" : other_pages, "views" : 32, "likes" : 16}}
 
     for cat, cat_data in cats.items():
-        c = add_cat(cat) # category first as page needs a category ref
+        c = add_cat(cat, cat_data["views"], cat_data["likes"]) # Do category first as page needs category ref.
         for p in cat_data["pages"]:
             add_page(c, p["title"], p["url"])
 
-# Print out the categories we have added
     for c in Category.objects.all():
         for p in Page.objects.filter(category=c):
-            print("- {0} - {1}". format(str(c), str(p)))
+            print( "- {0} - {1}". format(str(c), str(p)))
 
 def add_page(cat, title, url, views=0):
     p = Page.objects.get_or_create(category=cat, title=title)[0]
@@ -61,12 +59,16 @@ def add_page(cat, title, url, views=0):
     p.save()
     return p
 
-def add_cat(name):
+def add_cat(name, views, likes):
     c = Category.objects.get_or_create(name=name)[0]
+    c.views=views
+    c.likes=likes
     c.save()
     return c
 
-# Start execution here!
+# Execution will start here as the others are 'methods' and therefore will not run
+# unless they are called specifically.
+# This will only be executed when the module is run as a standalone Python script.
 if __name__ == '__main__':
     print("Starting Rango population script...")
     populate()
