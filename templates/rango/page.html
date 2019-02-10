@@ -1,25 +1,25 @@
-<!DOCTYPE html>
+{% extends 'rango/base.html' %}
+{% load staticfiles %}
 
-<html>
-    <head>
-        <title>Rango</title>
-    </head>
-    <body>
-        <div>
-            {%if page %}
-                <h1>{{page.title}}</h1>
-                {% if pages %}
-                    <ul>
-                        {% for page in pages %}
-                            <li><a href="{{ page.url }}">{{ page.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <strong>No pages currently in category.</strong>
-                {% endif %}
+{% block title_block %}
+    {{page.title}}
+{% endblock %}
+
+{% block body_block %}
+    <div>
+        {%if page %}
+            <h1>{{page.title}}</h1>
+            {% if pages %}
+                <ul>
+                    {% for page in pages %}
+                        <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+                    {% endfor %}
+                </ul>
             {% else %}
-                    The specified category does not exist!
+                <strong>No pages currently in category.</strong>
             {% endif %}
-        </div>
-    </body>
-</html>
+        {% else %}
+                The specified category does not exist!
+        {% endif %}
+    </div>
+{% endblock %}
